@@ -35,8 +35,8 @@ internal class Program
 
             try
             {
-                dayO?.Part01();
-                dayO?.Part02();
+                dayO.Part01();
+                dayO.Part02();
             }
             catch (Exception e)
             {
