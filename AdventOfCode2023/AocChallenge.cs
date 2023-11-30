@@ -7,7 +7,7 @@ public abstract class AocChallenge
 
     public AocChallenge(string inputFileName)
     {
-        var challengeFilePath = $".\\Inputs\\{inputFileName}";
+        var challengeFilePath = Path.Combine(".", "Inputs", inputFileName);
         ChallengeFileString = File.ReadAllText(challengeFilePath);
         ChallengeFileBytes = File.ReadAllBytes(challengeFilePath);
     }
