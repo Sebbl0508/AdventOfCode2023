@@ -2,23 +2,16 @@ namespace AdventOfCode2023;
 
 public abstract class AocChallenge
 {
-    private string challangeFilePath;
-    
-    public AocChallenge()
+    protected readonly string ChallengeFileString;
+    protected readonly byte[] ChallengeFileBytes;
+
+    public AocChallenge(string inputFileName)
     {
-        challangeFilePath = "PLACEHOLDER";
-    }
-    
-    public byte[] LoadChallengeFileBytes()
-    {
-        throw new NotImplementedException();
+        var challengeFilePath = $".\\Inputs\\{inputFileName}";
+        ChallengeFileString = File.ReadAllText(challengeFilePath);
+        ChallengeFileBytes = File.ReadAllBytes(challengeFilePath);
     }
 
-    public string LoadChallengeFileString()
-    {
-        throw new NotImplementedException();
-    }
-    
     public abstract void Part01();
     public abstract void Part02();
 }
