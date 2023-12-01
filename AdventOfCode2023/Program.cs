@@ -5,7 +5,7 @@ namespace AdventOfCode2023;
 internal class Program
 {
     private static uint AdventDays = 25;
-    private static bool UseExampleInput = true;
+    private static bool UseExampleInput = false;
 
     static void Main(string[] args)
     {
@@ -21,7 +21,7 @@ internal class Program
             var inputName = $"Day{day:00}.txt";
             if (useExampleInput)
                 inputName = $"Day{day:00}-example.txt";
-            
+
             var typeName = $"AdventOfCode2023.Days.Day{day:00}";
             var dayT = Type.GetType(typeName);
 
