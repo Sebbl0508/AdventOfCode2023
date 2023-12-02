@@ -57,7 +57,7 @@ public class Day01(string inputFileName) : AocChallenge(inputFileName)
             // sort found numbers (words or chars) by their order in the line
             foundNumbers.Sort((index1, index2) => index1.Index.CompareTo(index2.Index));
 
-            var numbers = foundNumbers.Select<SubstringWithIndex, uint>(x => WordNumbers.ContainsKey(x.SubString) ? WordNumbers.GetValueOrDefault(x.SubString) : uint.Parse(x.SubString)).ToList();
+            var numbers = foundNumbers.Select(x => WordNumbers.ContainsKey(x.SubString) ? WordNumbers.GetValueOrDefault(x.SubString) : uint.Parse(x.SubString)).ToList();
 
             uint calibrationValue = uint.Parse($"{numbers[0]}{numbers[^1]}");
             sumOfCalibrationValues += calibrationValue;
