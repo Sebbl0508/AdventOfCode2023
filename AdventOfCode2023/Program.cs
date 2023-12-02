@@ -9,8 +9,6 @@ internal class Program
 
     static void Main(string[] args)
     {
-        Console.WriteLine("Hello World");
-
         RunDaysSequential(UseExampleInput);
     }
 
@@ -35,6 +33,7 @@ internal class Program
             {
                 dayObj.Part01();
                 dayObj.Part02();
+                Console.WriteLine();
             }
             catch (Exception e)
             {
