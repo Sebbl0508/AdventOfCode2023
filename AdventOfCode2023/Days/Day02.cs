@@ -8,7 +8,7 @@ public class Day02(string inputFileName) : AocChallenge(inputFileName)
         ["green"] = 13,
         ["blue"] = 14
     };
-    
+
     public override void Part01()
     {
         var lines = ChallengeFileString.Split("\n");
@@ -24,7 +24,7 @@ public class Day02(string inputFileName) : AocChallenge(inputFileName)
             {
                 if (gameImpossible)
                     break;
-                
+
                 foreach (var cubeInfo in roll)
                 {
                     var colorAndCount = cubeInfo.Trim().Split(" ");
@@ -33,12 +33,12 @@ public class Day02(string inputFileName) : AocChallenge(inputFileName)
 
                     var maxCubes = MaxCubesPart01.GetValueOrDefault(cubeColor);
                     if (cubeCount <= maxCubes) continue;
-                    
+
                     gameImpossible = true;
                     break;
                 }
             }
-            if(!gameImpossible)
+            if (!gameImpossible)
                 possibleIds.Add(gameId);
         }
 
@@ -68,7 +68,7 @@ public class Day02(string inputFileName) : AocChallenge(inputFileName)
                     var cubeColor = colorAndCount[1];
 
                     var minCount = minPossibleGame.GetValueOrDefault(cubeColor);
-                    if(cubeCount > minCount)
+                    if (cubeCount > minCount)
                         minPossibleGame[cubeColor] = cubeCount;
                 }
             }
@@ -76,7 +76,7 @@ public class Day02(string inputFileName) : AocChallenge(inputFileName)
             var powerSetOfCubes = minPossibleGame["red"] * minPossibleGame["green"] * minPossibleGame["blue"];
             sumOfPowerOfSets += powerSetOfCubes;
         }
-        
+
         Console.WriteLine($"[DAY02][PT2] Sum of the power of the sets: {sumOfPowerOfSets}");
     }
 }

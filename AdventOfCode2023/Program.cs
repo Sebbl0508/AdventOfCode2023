@@ -9,7 +9,10 @@ internal class Program
 
     static void Main(string[] args)
     {
-        RunDaysSequential(UseExampleInput);
+        var day03 = new Day03("Day03.txt");
+        day03.Part01();
+
+        //RunDaysSequential(UseExampleInput);
     }
 
     static void RunDaysSequential(bool useExampleInput)
