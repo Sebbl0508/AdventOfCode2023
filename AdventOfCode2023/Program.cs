@@ -9,7 +9,7 @@ internal class Program
 
     static void Main(string[] args)
     {
-        RunDaysSequential(UseExampleInput);
+         RunDaysSequential(UseExampleInput);
     }
 
     static void RunDaysSequential(bool useExampleInput)
