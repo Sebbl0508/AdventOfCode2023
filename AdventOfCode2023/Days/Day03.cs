@@ -1,95 +1,117 @@
+using System.Text.RegularExpressions;
+
 namespace AdventOfCode2023.Days;
 
 public class Day03(string inputFileName) : AocChallenge(inputFileName)
 {
     public override void Part01()
     {
-        var lines = ChallengeFileString.Split("\n");
-        
-        // this could be done in 1 loop instead of 2, i know
-        var numbers = ParseNumbers(lines);
+        var lines = Regex.Split(ChallengeFileString, "\r\n|\r|\n");
+
         var symbols = FindSymbols(lines);
+        var partNumbers = FindPartNumbers(lines);
 
-        var partNumberSum = 0;
+        var validPartNumbers =
+            from partNumber in partNumbers
+            where symbols.Any(sym => IsAdjacent(sym, partNumber))
+            select int.Parse(partNumber.Chars);
 
-        foreach (var partNumber in numbers)
-        {
-            partNumberSum += (
-                from symbol in symbols
-                where symbol.Column >= partNumber.Begin - 1
-                where symbol.Column <= partNumber.End + 1
-                where Math.Abs(partNumber.Line - symbol.Line) <= 1
-                select int.Parse(partNumber.Chars)).Sum();
-        }
-        
-        Console.WriteLine($"[DAY03][PT1] Sum of part numbers: {partNumberSum}");
+        Console.WriteLine($"[DAY03][PT1] Sum of valid part numbers: {validPartNumbers.Sum()}");
     }
 
     public override void Part02()
     {
-        throw new NotImplementedException();
+        var lines = Regex.Split(ChallengeFileString, "\r\n|\r|\n");
+
+        var symbols = FindSymbols(lines);
+        var partNumbers = FindPartNumbers(lines);
+
+        var gearRatios =
+            from gear in symbols
+            let adjacentPartNumbers =
+                from partNumber in partNumbers
+                where IsAdjacent(gear, partNumber)
+                select int.Parse(partNumber.Chars)
+            where adjacentPartNumbers.Count() == 2
+            where gear.Character == '*'
+            select adjacentPartNumbers.First() * adjacentPartNumbers.Last();
+
+        Console.WriteLine($"[DAY03][PT2] Sum of gear ratios: {gearRatios.Sum()}");
     }
 
-    private static List<Symbol> FindSymbols(IReadOnlyList<string> lines)
+    private Symbol[] FindSymbols(string[] lines)
     {
         var symbols = new List<Symbol>();
 
-        for (var iLine = 0; iLine < lines.Count; iLine++)
+        for (var iLine = 0; iLine < lines.Length; iLine++)
         {
             var line = lines[iLine];
             for (var iChar = 0; iChar < line.Length; iChar++)
             {
                 var c = line[iChar];
-
                 if (c is < '0' or > '9' && c != '.')
-                {
                     symbols.Add(new Symbol(c, iLine, iChar));
-                }
             }
         }
 
-        return symbols;
+        return symbols.ToArray();
     }
 
-    private static List<Number> ParseNumbers(IReadOnlyList<string> lines)
+    private PartNumber[] FindPartNumbers(string[] lines)
     {
-        var numbers = new List<Number>();
-        
-        for(var line = 0; line < lines.Count; line++)
+        var partNumbers = new List<PartNumber>();
+
+        for (var iLine = 0; iLine < lines.Length; iLine++)
         {
-            var currentNum = "";
-            var currentNumBegin = 0;
+            var line = lines[iLine];
 
-            var chars = lines[line].ToCharArray();
+            var numBuilder = "";
+            var numBeginCol = 0;
 
-            for (var i = 0; i < chars.Length; i++)
+            for (var iChar = 0; iChar < line.Length; iChar++)
             {
-                if (chars[i] is >= '0' and <= '9')
-                {
-                    if(currentNum.Length == 0)
-                        currentNumBegin = i;
+                var c = line[iChar];
 
-                    currentNum += chars[i];
-                }
-                else if(currentNum.Length > 0)
+                if (c is >= '0' and <= '9')
                 {
-                    numbers.Add(new Number(currentNum, line, currentNumBegin, i-1));
-                    currentNum = "";
-                    currentNumBegin = 0;
+                    if (numBuilder == "")
+                        numBeginCol = iChar;
+
+                    numBuilder += c;
+                }
+                else if (numBuilder.Length > 0)
+                {
+                    partNumbers.Add(new PartNumber(numBuilder, iLine, numBeginCol));
+                    numBuilder = "";
+                    numBeginCol = -1;
+                }
+
+                // If we're at the end of the line save the number
+                if (iChar >= line.Length - 1)
+                {
+                    partNumbers.Add(new PartNumber(numBuilder, iLine, numBeginCol));
+                    numBuilder = "";
+                    numBeginCol = -1;
                 }
             }
         }
 
-        return numbers;
+        return partNumbers.ToArray();
+    }
+
+    private static bool IsAdjacent(Symbol p1, PartNumber p2)
+    {
+        return Math.Abs(p2.Line - p1.Line) <= 1 &&
+               p1.Column <= p2.Column + p2.Chars.Length &&
+               p2.Column <= p1.Column + 1;
     }
 }
 
-internal class Number(string chars, int line, int begin, int end)
+internal class PartNumber(string chars, int line, int column)
 {
     public string Chars { get; set; } = chars;
     public int Line { get; set; } = line;
-    public int Begin { get; set; } = begin;
-    public int End { get; set; } = end;
+    public int Column { get; set; } = column;
 }
 
 internal class Symbol
